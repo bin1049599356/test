@@ -24,36 +24,31 @@ int main()
 
     //  创建矩阵，指定到视点的距离。 
     osg::Matrix trans;
-    trans.makeTranslate(0., 0., -12.);
+    trans.makeTranslate(3., 3., -12.);
     //  旋转一定角度（弧度值）。 
     double angle(0.);
     //angle = -90.0 / 180.0 * 3.14;
 
 
-    osg::Vec3d upOrg = osg::Vec3f(0, 1, 0);
+    osg::Vec3d upOrg = osg::Vec3f(0, 0, 1);
     osg::Vec3d dstPoint = osg::Vec3f(0, 0, 0);
-    osg::Vec3d eye = osg::Vec3f(0, 3, -12);
+    osg::Vec3d eye = osg::Vec3f(10, -13, 12);
 
     osg::Vec3d direct = eye - dstPoint;
     direct.normalize();
-    osg::Vec3d right = direct ^ upOrg;
+    osg::Vec3d right = upOrg ^ direct;
     right.normalize();
-    osg::Vec3d up = right ^ direct;
+    osg::Vec3d up = direct ^ right;
     up.normalize();
 
     osg::Matrixd view0 = osg::Matrix(
         right.x(), up.x(), direct.x(), 0,
         right.y(), up.y(), direct.y(), 0,
         right.z(), up.z(), direct.z(), 0,
-        eye.x(), eye.y(), eye.z(), 1
+       0, 0, 0, 1
     );
 
-    //view0 = osg::Matrix(
-    //    right.x(), right.y(), right.z(), 0,
-    //    up.x(), up.y(), up.z(), 0,
-    //    direct.x(), direct.y(), direct.z(), 0,
-    //    eye.x(), eye.y(), eye.z(), 1
-    //);
+    view0 = osg::Matrix().translate(-eye) * view0;
 
 
     while (!viewer.done()) 
@@ -66,8 +61,9 @@ int main()
         // 设置视口矩阵（旋转矩阵和平移矩阵连乘）。 
         osg::Matrixd view = rot * trans;
         //viewer.getCamera()->setViewMatrix(rot * trans);
-        //view = view0;
+        view = view0;
         viewer.getCamera()->setViewMatrix(view);
+        //viewer.getCamera()->setViewMatrixAsLookAt(eye, dstPoint, upOrg);
 
         // 绘制下一帧 
         viewer.frame();
