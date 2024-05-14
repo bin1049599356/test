@@ -16,8 +16,11 @@ int main()
     osgViewer::Viewer viewer;
     //osg::Camera * camera = viewer.getCamera();
     //camera->setViewport(0, 0, 640, 480);
+
+    osg::Node * cowModel = osgDB::readNodeFile("D:\\tjb\\opensrc\\OpenSceneGraph\\assess\\OpenSceneGraph-Data-3.0.0\\cow.osg");
+
     
-    viewer.setSceneData(osgDB::readNodeFile("D:\\tjb\\opensrc\\OpenSceneGraph\\assess\\OpenSceneGraph-Data-3.0.0\\cow.osg"));
+    viewer.setSceneData(cowModel);
     //viewer.run();
 
     viewer.getCamera()->setProjectionMatrixAsPerspective(40., 1., 1., 100.);
